@@ -47,7 +47,7 @@ const defaultState = {
 export function SerializableState() {
   window.state = produce(defaultState, (a) => a);
 
-  function view({ attrs }) {
+  function view() {
     return (
       <div>
         <h1>Serializable State Example</h1>
