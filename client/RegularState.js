@@ -1,4 +1,5 @@
 import m from "mithril";
+import { produce } from "immer";
 import { DummyTrack, SliceTrack, CounterTrack } from "./tracks";
 
 function createRandomTrack() {
@@ -39,12 +40,18 @@ function addRandomTrack() {
   const track = createRandomTrack();
   const id = uuidv4();
   tracks.set(id, track);
-  state.trackList.push(id);
+  state = produce(state, (d) => {
+    d.trackList.push(id);
+    d.previousState = state;
+  });
 }
 
 function removeTrack() {
   const id = state.trackList[state.trackList.length - 1];
-  state.trackList.pop();
+  state = produce(state, (d) => {
+    d.trackList.pop();
+    d.previousState = state;
+  });
   tracks.delete(id);
 }
 
@@ -55,8 +62,12 @@ tracks.set("3", new CounterTrack({ query: "select * from counter" }));
 
 const initialTracks = ["1", "2", "3"];
 
+const defaultState = {
+  trackList: ["1", "2", "3"],
+};
+
 export function RegularState() {
-  window.state = { trackList: [...initialTracks] };
+  window.state = produce(defaultState, (a) => a);
 
   function view() {
     return (
@@ -68,7 +79,11 @@ export function RegularState() {
         <div>
           <button onclick={() => addRandomTrack()}>Add random track</button>
           <button onclick={() => removeTrack()}>Remove track</button>
-          <button onclick={() => m.redraw()}>Redraw</button>
+          <button
+            onclick={() => (state = produce(state, (d) => d.previousState))}
+          >
+            Undo
+          </button>
           <button
             onclick={() => localStorage.setItem("bar", JSON.stringify(state))}
           >

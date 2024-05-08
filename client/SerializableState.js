@@ -75,7 +75,6 @@ export function SerializableState() {
           >
             Remove track
           </button>
-          <button onclick={() => m.redraw()}>Redraw</button>
           <button
             onclick={() => (state = produce(state, (d) => d.previousState))}
           >
