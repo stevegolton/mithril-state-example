@@ -23,13 +23,16 @@ function createRandomTrack() {
 }
 
 function uuidv4() {
-  return "10000000-1000-4000-8000-100000000000".replace(/[018]/g, c =>
-    (+c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> +c / 4).toString(16)
+  return "10000000-1000-4000-8000-100000000000".replace(/[018]/g, (c) =>
+    (
+      +c ^
+      (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (+c / 4)))
+    ).toString(16)
   );
 }
 
 function restoreState() {
-  window.state = JSON.parse(localStorage.getItem("state"));
+  window.state = JSON.parse(localStorage.getItem("bar"));
 }
 
 function addRandomTrack() {
@@ -50,33 +53,31 @@ tracks.set("1", new DummyTrack());
 tracks.set("2", new SliceTrack({ query: "select * from slice" }));
 tracks.set("3", new CounterTrack({ query: "select * from counter" }));
 
-const defaultTracks = ["1", "2", "3"];
+const initialTracks = ["1", "2", "3"];
 
 export function RegularState() {
-  window.state = { trackList: [...defaultTracks] };
+  window.state = { trackList: [...initialTracks] };
 
   function view() {
     return (
       <div>
         <h1>Regular State Example</h1>
         <h2>Tracklist</h2>
+        <div>{`Tracks in map ${tracks.size}`}</div>
+        <div>{`Tracks in tracklist ${window.state.trackList.length}`}</div>
         <div>
-          <button onclick={() => addRandomTrack()}>
-            Add random track
-          </button>
-          <button onclick={() => removeTrack()}>
-            Remove last track
-          </button>
+          <button onclick={() => addRandomTrack()}>Add random track</button>
+          <button onclick={() => removeTrack()}>Remove track</button>
           <button onclick={() => m.redraw()}>Redraw</button>
           <button
-            onclick={() => localStorage.setItem("state", JSON.stringify(state))}
+            onclick={() => localStorage.setItem("bar", JSON.stringify(state))}
           >
             Save State
           </button>
           <button onclick={() => restoreState()}>Restore State</button>
           <button
             onclick={() => {
-              window.state = { trackList: [...defaultTracks] };
+              window.state = { trackList: [...initialTracks] };
             }}
           >
             Reset
@@ -88,7 +89,7 @@ export function RegularState() {
             if (track) {
               return <li>{track.render()}</li>;
             }
-            return <li>!Missing Track!</li>
+            return <li>!Missing Track!</li>;
           })}
         </ul>
       </div>

@@ -1,6 +1,8 @@
+import m from "mithril";
+
 export class DummyTrack {
   render() {
-    return `DummyTrack`;
+    return <span style="color: grey">DummyTrack</span>;
   }
 }
 
@@ -9,7 +11,7 @@ export class SliceTrack {
     this.state = state;
   }
   render() {
-    return `SliceTrack: ${this.state.query}`;
+    return <span style="color: red">`SliceTrack: ${this.state.query}`</span>;
   }
 }
 
@@ -18,6 +20,6 @@ export class CounterTrack {
     this.state = state;
   }
   render() {
-    return `CounterTrack: ${this.state.query}`;
+    return <span style="color: blue">`CounterTrack: ${this.state.query}`</span>;
   }
 }

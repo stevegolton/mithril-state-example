@@ -52,6 +52,8 @@ export function SerializableState() {
       <div>
         <h1>Serializable State Example</h1>
         <h2>Tracklist</h2>
+        <div>{`Track resolvers ${trackResolvers.size}`}</div>
+        <div>{`Tracks in tracklist ${window.state.trackList.length}`}</div>
         <div>
           <button
             onclick={() =>
@@ -71,7 +73,7 @@ export function SerializableState() {
               }))
             }
           >
-            Remove last track
+            Remove track
           </button>
           <button onclick={() => m.redraw()}>Redraw</button>
           <button
@@ -80,12 +82,12 @@ export function SerializableState() {
             Undo
           </button>
           <button
-            onclick={() => localStorage.setItem("state", JSON.stringify(state))}
+            onclick={() => localStorage.setItem("foo", JSON.stringify(state))}
           >
             Save State
           </button>
           <button
-            onclick={() => (state = JSON.parse(localStorage.getItem("state")))}
+            onclick={() => (state = JSON.parse(localStorage.getItem("foo")))}
           >
             Restore State
           </button>
